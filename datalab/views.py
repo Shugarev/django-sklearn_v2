@@ -1,8 +1,9 @@
 # Create your views here.
 
+from django.shortcuts import render
 
 def dataset(request):
-    pass
+    return render(request, 'datalab/file.html')
 
 
 def profile(request):
