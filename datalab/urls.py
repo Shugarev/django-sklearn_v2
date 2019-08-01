@@ -4,7 +4,7 @@ from datalab import views
 
 urlpatterns = [
     path('', views.dataset),
-    path('file/', views.dataset, name='file'),
+    path('dataset/', views.dataset, name='dataset'),
     path('profile/', views.profile, name='profile'),
     path('profile_config/', views.profile_config, name='profile_config'),
     path('experiment/', views.experiment, name='experiment'),
@@ -14,3 +14,4 @@ urlpatterns = [
     path('research/', views.research, name='research')
 
 ]
+

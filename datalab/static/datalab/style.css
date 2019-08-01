@@ -1,1 +1,6 @@
-li a {}
+/* static css */
+.main_table_border {
+    padding:40px;
+    margin:40px;
+    border:1px solid #ccc
+}

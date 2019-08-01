@@ -1,9 +1,26 @@
 # Create your views here.
 
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib import messages
+
+from datalab.models import UploadDataSet
+from datalab.models import DataSet
+from datalab.models import Algorithm
+from datalab.models import Profile
+from datalab.models import Experiment
+
 
 def dataset(request):
-    return render(request, 'datalab/file.html')
+    if request.method == "POST":
+        if request.POST.get('form_name') == 'upload_form':
+            img = UploadDataSet(request.POST, request.FILES)
+            if img.is_valid():
+                img.save()
+    datasets = DataSet.objects.all().order_by('-upload_date')
+    context = {'datasets': datasets, 'dataset': 'active'}
+    return render(request, 'datalab/dataset.html', context)
 
 
 def profile(request):
@@ -19,7 +36,13 @@ def experiment(request):
 
 
 def delete_dataset(request, pk):
-    pass
+    if request.method == "POST":
+        img = DataSet.objects.get(pk=pk)
+        try:
+            img.delete()
+        except IOError as e:
+            messages.error(request, str(e))
+    return HttpResponseRedirect(reverse("dataset"))
 
 
 def delete_profile(request, pk):
