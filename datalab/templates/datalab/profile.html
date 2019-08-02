@@ -1,0 +1,71 @@
+{% extends "datalab/base.html" %}
+{% block content %}
+<div class="container">
+    <h6 class="page-header">Select the algorithm and teach dataset. Click on the button Config model.</h6>
+    <form action="{% url 'profile_config' %}" method="post"  >{% csrf_token %}
+        <input type="hidden" name="form_name" value="profile_config">
+        <div class="row">
+            <div class="col-sm-3">
+                <div>Algorithms</div>
+                <select class="form-control" name="algorithm" required>
+                    <option selected disabled hidden value="">...</option>
+                    {% for instance in algorithms %}
+                    <option value="{{ instance.pk }}">{{ instance.algorithm_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <div>Teach datasets</div>
+                <select class="form-control" name="teach" required id="teach_select">>
+                    <option selected disabled hidden value="">...</option>
+                    {% for instance in datasets %}
+                    <option value="{{ instance.pk }}">{{ instance.file.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <div>Model name</div>
+                <input type="text" size="20" name="profile_name" class="form-control" placeholder="profile name" value="" required>
+            </div>
+            <div class="col-sm-2">
+                <div>Config</div>
+                <button type="submit" class="btn btn-primary btn-sm" >Config model</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+{% include 'datalab/error.html' %}
+<div class="main_table_border">
+    <table class="table mb-0">
+        <thead>
+        <tr>
+            <th>Model name</th>
+            <th>Algorithm</th>
+            <th>Feature Importance</th>
+            <th>Teach name</th>
+            <th>Date created</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for instance in profiles %}
+        <tr>
+            <td>{{ forloop.counter }}. {{ instance.profile_name }}</td>
+            <td> {{ instance.algorithm.algorithm_name }}</td>
+            <td><a href="/media/{{ instance.feature_importance }}" class="text-info" target="_blank">
+                {{ instance.feature_importance }}
+            </a></td>
+            <td>{{ instance.teach.file.name}}</td>
+            <td>{{ instance.created_date| date:'Y-m-d H:i:s' }}</td>
+            <td>
+                <form action="{% url 'delete_profile' instance.pk %}" method="post">{% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

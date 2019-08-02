@@ -1,0 +1,52 @@
+{% extends "datalab/base.html" %}
+{% block content %}
+<div class="container">
+    <h6 class="page-header">Model config.</h6>
+    <form action="{% url 'profile' %}" method="post" id="profile_conf_form">{% csrf_token %}
+        <input type="hidden" name="form_name" value="create_profile">
+        <div class="row">
+            <div class="col-sm-3">
+                <div>Algorithm</div>
+                <select class="form-control" name="algorithm"  id="algorithm_select" readonly>
+                    <option selected  value="{{ algorithm.pk }}">{{ algorithm.algorithm_name }}</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <div>Teach dataset</div>
+                <select class="form-control" name="teach"  id="teach_select" readonly>
+                    <option selected  value="{{ teach.pk }}">{{ teach.file.name }}</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <div>Model name</div>
+                <input type="text" size="20" name="profile_name" class="form-control"  value="{{ profile_name }}" readonly>
+            </div>
+            <div class="col-sm-3">
+                <div>Model</div>
+                <button type="submit" class="btn btn-primary btn-sm">Create model</button>
+            </div>
+        </div>
+
+        <div class="row"  style="padding:40px;margin:40px;border:1px solid #ccc;margin-left:0">
+             {% for key, val in columns.items  %}
+                <div class="col-sm-4">
+                    {% if key == "status" %}
+                        <input type="checkbox" name="{{ key }}" value="1"  onclick="return false"  checked />
+                    {% else %}
+                        <input type="checkbox" name="{{ key }}" value="1"  checked />
+                    {% endif %}
+                    <label style="margin-left:10px">{{ key }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row"  style="padding:40px;margin:40px;border:1px solid #ccc;margin-left:0">
+              <div class="form-group">
+                 <label for="text_area">Example default config(json format). IF you need update config params.</label>
+                 <textarea id="text_area" cols=100 rows=10  form="profile_conf_form" name="profile_params" id="text_area">{{ default_config }}</textarea>
+              </div>
+        </div>
+    </form>
+</div>
+{% include 'datalab/error.html' %}
+{% endblock %}

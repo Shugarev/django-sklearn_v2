@@ -80,11 +80,11 @@ class Profile(ExtraModel):
     def delete(self, *args, **kwargs):
         is_deletable, related = self.is_deletable()
         if is_deletable:
-            model_path = "{}/media/{}".format(BASE_DIR, self.profile_name)
+            profile_path = "{}/media/{}".format(BASE_DIR, self.profile_name)
             feature_path = "{}/media/{}".format(BASE_DIR, self.feature_importance)
             super().delete(*args, **kwargs)
-            if os.path.isfile(model_path):
-                os.remove(model_path)
+            if os.path.isfile(profile_path):
+                os.remove(profile_path)
             if os.path.isfile(feature_path):
                 os.remove(feature_path)
 
