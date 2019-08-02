@@ -1,10 +1,10 @@
 import pandas as pd
-
+import os
 from datalab.models import Algorithm
 from datalab.models import DataSet
 from datalab.models import Profile
 from sklearn_django.settings import BASE_DIR
-
+from evaluation.constants import Params
 
 def get_data_to_create_profile_config(request):
     teach_id = request.POST.get('teach')
@@ -60,3 +60,7 @@ def get_full_path(name):
 
 def get_description(profile,test):
     return 'model: ' +  profile.profile_name + '\ntest_name: ' + test.file.name
+
+def remove_compare_results():
+    if os.path.exists(Params.COMPARE_RESULT_PATH):
+        os.remove(Params.COMPARE_RESULT_PATH)

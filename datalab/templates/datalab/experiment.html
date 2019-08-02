@@ -56,7 +56,7 @@
                 {{ instance.experiment_name }}</a>
             </td>
             <td><a href="/media/{{ instance.analyzer_name }}" class="text-info"
-                                          target="_blank">
+                   target="_blank">
                 {{ instance.analyzer_name }}</a>
             </td>
             <td>{{ instance.profile.profile_name }}</td>
@@ -71,5 +71,19 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
+<div class="container">
+    <form action="" method="post" enctype="multipart/form-data" name="sergey">{% csrf_token %}
+        <input type="hidden" name="form_name" value="remove_compare_results">
+        <div class="row">
+            <div class="col-sm-3">
+                <a href="{{ compare_path }}" class="btn btn-primary btn-sm" target="_blank">Download Compare results</a>
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-danger btn-sm">Clear compare results</button>
+            </div>
+
+        </div>
+    </form>
 </div>
 {% endblock %}

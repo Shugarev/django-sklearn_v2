@@ -1,7 +1,8 @@
 # Create your views here.
 import json
-
 import pandas as pd
+import os
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -18,9 +19,11 @@ from datalab.utils import get_full_path
 from datalab.utils import get_used_columns_to_profile
 from datalab.utils import get_description
 from datalab.utils import get_data_to_create_experiment
+from datalab.utils import remove_compare_results
 from evaluation.model_creator import modelCreator
 from evaluation.dataset_tester import datasetTester
 from sklearn_django.settings import BASE_DIR
+from evaluation.constants import Params
 
 
 def dataset(request):
@@ -110,12 +113,16 @@ def experiment(request):
             datasetTester.run(task, get_full_path(test.file.name), profile.algorithm.algorithm_name
             , get_full_path(profile.profile_name), get_full_path(experiment_name), get_full_path(analyzer_name),
                               profile.get_used_factor_list(),description )
+        if request.POST.get('form_name') == 'remove_compare_results':
+            remove_compare_results()
+
+
 
     datasets = DataSet.objects.all().order_by('-upload_date')
     profiles = Profile.objects.all().order_by('-created_date')
     experiments = Experiment.objects.all().order_by('-created_date')
     context = {'datasets': datasets, 'experiments': experiments
-        , 'profiles': profiles, 'experiment': 'active'}
+        , 'profiles': profiles, 'experiment': 'active', 'compare_path': Params.COMPARE_RESULT_URL}
 
     return render(request, 'datalab/experiment.html', context)
 
@@ -128,4 +135,5 @@ def delete_experiment(request, pk):
 
 
 def research(request):
-    pass
+    context = {}
+    return render(request, 'datalab/research.html', context)
