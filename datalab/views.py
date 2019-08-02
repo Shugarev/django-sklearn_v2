@@ -11,13 +11,15 @@ from datalab.models import Algorithm
 from datalab.models import DataSet
 from datalab.models import Profile
 from datalab.models import UploadDataSet
-from datalab.utils import get_objects_to_create_profile
-from datalab.utils import get_objects_to_create_profile_config
-from datalab.utils import get_profile_path
-from datalab.utils import get_teach_path
-from datalab.utils import get_feature_path
+from datalab.models import Experiment
+from datalab.utils import get_data_to_create_profile
+from datalab.utils import get_data_to_create_profile_config
+from datalab.utils import get_full_path
 from datalab.utils import get_used_columns_to_profile
+from datalab.utils import get_description
+from datalab.utils import get_data_to_create_experiment
 from evaluation.model_creator import modelCreator
+from evaluation.dataset_tester import datasetTester
 from sklearn_django.settings import BASE_DIR
 
 
@@ -35,7 +37,7 @@ def dataset(request):
 def profile(request):
     if request.method == "POST":
         if request.POST.get('form_name') == 'create_profile':
-            teach, algorithm, profile_name, feature_importance = get_objects_to_create_profile(request)
+            teach, algorithm, profile_name, feature_importance = get_data_to_create_profile(request)
             used_columns = get_used_columns_to_profile(request, teach)
 
             if request.POST.get('profile_params'):
@@ -49,9 +51,9 @@ def profile(request):
                               , feature_importance=feature_importance, factors=used_columns,
                               profile_params=profile_params)
             profile.save()
-            modelCreator.run(get_teach_path(teach.file.name), algorithm.algorithm_name
-                                      , profile.profile_params, get_profile_path(profile_name)
-                                      , profile.get_used_factor_list(), get_feature_path(feature_importance))
+            modelCreator.run(get_full_path(teach.file.name), algorithm.algorithm_name
+                             , profile.profile_params, get_full_path(profile_name)
+                             , profile.get_used_factor_list(), get_full_path(feature_importance))
 
     datasets = DataSet.objects.all().order_by('-upload_date')
     profiles = Profile.objects.all().order_by('-created_date')
@@ -65,7 +67,7 @@ def profile(request):
 def profile_config(request):
     if request.method == "POST":
         if request.POST.get('form_name') == 'profile_config':
-            teach, algorithm, profile_name = get_objects_to_create_profile_config(request)
+            teach, algorithm, profile_name = get_data_to_create_profile_config(request)
             file_path = "{}/media/{}".format(BASE_DIR, teach.file.name)
             df = pd.read_csv(file_path, dtype=str, nrows=1)
             columns = {col: 1 for col in list(df)}
@@ -76,11 +78,6 @@ def profile_config(request):
                 , 'default_config': default_config}
             return render(request, 'datalab/profile_config.html', context)
         return HttpResponseRedirect(reverse("profile"))
-
-
-def experiment(request):
-    pass
-
 
 def delete_dataset(request, pk):
     if request.method == "POST":
@@ -101,9 +98,33 @@ def delete_profile(request, pk):
             messages.error(request, str(e))
     return HttpResponseRedirect(reverse("profile"))
 
+def experiment(request):
+    if request.method == "POST":
+        if request.POST.get('form_name') == 'create_experiment':
+            profile, test, experiment_name, analyzer_name = get_data_to_create_experiment(request)
+            experiment = Experiment(test=test, profile=profile, experiment_name=experiment_name, analyzer_name=analyzer_name)
+            experiment.save()
+
+            task = 'Tester'
+            description = get_description(profile,test)
+            datasetTester.run(task, get_full_path(test.file.name), profile.algorithm.algorithm_name
+            , get_full_path(profile.profile_name), get_full_path(experiment_name), get_full_path(analyzer_name),
+                              profile.get_used_factor_list(),description )
+
+    datasets = DataSet.objects.all().order_by('-upload_date')
+    profiles = Profile.objects.all().order_by('-created_date')
+    experiments = Experiment.objects.all().order_by('-created_date')
+    context = {'datasets': datasets, 'experiments': experiments
+        , 'profiles': profiles, 'experiment': 'active'}
+
+    return render(request, 'datalab/experiment.html', context)
+
 
 def delete_experiment(request, pk):
-    pass
+    if request.method == "POST":
+        experiment = Experiment.objects.get(pk=pk)
+        experiment.delete()
+    return HttpResponseRedirect(reverse("experiment"))
 
 
 def research(request):

@@ -2,10 +2,11 @@ import pandas as pd
 
 from datalab.models import Algorithm
 from datalab.models import DataSet
+from datalab.models import Profile
 from sklearn_django.settings import BASE_DIR
 
 
-def get_objects_to_create_profile_config(request):
+def get_data_to_create_profile_config(request):
     teach_id = request.POST.get('teach')
     teach = DataSet.objects.get(pk=teach_id)
 
@@ -16,7 +17,7 @@ def get_objects_to_create_profile_config(request):
     return teach, algorithm, profile_name
 
 
-def get_objects_to_create_profile(request):
+def get_data_to_create_profile(request):
     teach_id = request.POST.get('teach')
     teach = DataSet.objects.get(pk=teach_id)
 
@@ -27,6 +28,16 @@ def get_objects_to_create_profile(request):
     feature_importance = 'fi/fi-' + request.POST.get('profile_name') + '.csv'
     return teach, algorithm, profile_name, feature_importance
 
+def get_data_to_create_experiment(request):
+    profile_id = request.POST.get('profile_id')
+    profile = Profile.objects.get(pk=profile_id)
+
+    test_id = int(request.POST.get('test'))
+    test = DataSet.objects.get(pk=test_id)
+
+    experiment_name = 'exp/Test1-' + request.POST.get('experiment_name') + '.csv'
+    analyzer_name = 'exp/Analyzer-' + request.POST.get('experiment_name') + '.csv'
+    return profile, test, experiment_name, analyzer_name
 
 def get_file_columns(teach):
     file_path = "{}/media/{}".format(BASE_DIR, teach.file.name)
@@ -43,11 +54,9 @@ def get_used_columns_to_profile(request, teach):
     return used_columns
 
 
-def get_teach_path(teach_file_name):
-    return "{}/media/{}".format(BASE_DIR, teach_file_name)
+def get_full_path(name):
+    return "{}/media/{}".format(BASE_DIR, name)
 
-def get_feature_path(feature_name):
-    return "{}/media/{}".format(BASE_DIR, feature_name)
 
-def get_profile_path(profile_name):
-    return "{}/media/{}".format(BASE_DIR, profile_name)
+def get_description(profile,test):
+    return 'model: ' +  profile.profile_name + '\ntest_name: ' + test.file.name

@@ -1,0 +1,75 @@
+{% extends "datalab/base.html" %}
+{% block content %}
+<div class="container">
+    <h6 class="page-header">Select the model and test dataset. Click on the button create experiment.</h6>
+    <form action="#" method="post" id="experiment_form">{% csrf_token %}
+        <input type="hidden" id="experiment" name="form_name" value="create_experiment">
+        <div class="row">
+            <div class="col-sm-3">
+                <div>Model</div>
+                <select class="form-control" name="profile_id" required>
+                    <option selected disabled hidden>...</option>
+                    {% for instance in profiles %}
+                    <option value="{{ instance.pk }}">{{ instance.profile_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <div>Test datasets</div>
+                <select class="form-control" name="test" required>
+                    <option selected disabled hidden>...</option>
+                    {% for instance in datasets %}
+                    <option value="{{ instance.pk }}">{{ instance.file.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <div>Experiment name</div>
+                <input type="text" size="20" name="experiment_name" class="form-control" placeholder="Experiment name"
+                       required/>
+            </div>
+            <div class="col-sm-3">
+                <div>Experiment</div>
+                <button type="submit" class="btn btn-primary btn-sm">Create experiment</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="main_table_border">
+    <table class="table mb-0">
+        <thead>
+        <tr>
+            <th>Experiment name</th>
+            <th>Analyzer</th>
+            <th>Model name</th>
+            <th>Test name</th>
+            <th>Date created</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for instance in experiments %}
+        <tr>
+            <td>{{ forloop.counter }}. <a href="/media/{{ instance.experiment_name }}" class="text-info"
+                                          target="_blank">
+                {{ instance.experiment_name }}</a>
+            </td>
+            <td><a href="/media/{{ instance.analyzer_name }}" class="text-info"
+                                          target="_blank">
+                {{ instance.analyzer_name }}</a>
+            </td>
+            <td>{{ instance.profile.profile_name }}</td>
+            <td>{{ instance.test.file.name }}</td>
+            <td>{{ instance.created_date| date:'Y-m-d H:i:s' }}</td>
+            <td>
+                <form action="{% url 'delete_experiment' instance.pk %}" method="post">{% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

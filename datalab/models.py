@@ -97,14 +97,18 @@ class Experiment(ExtraModel):
     profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True)
     experiment_name = models.CharField(max_length=30, blank=False)
+    analyzer_name = models.CharField(max_length=30, blank=False)
 
     def delete(self, *args, **kwargs):
         is_deletable, related = self.is_deletable()
         if is_deletable:
             experiment_path = "{}/media/{}".format(BASE_DIR, self.experiment_name)
+            analyzer_path = "{}/media/{}".format(BASE_DIR, self.analyzer_name)
             super().delete(*args, **kwargs)
             if os.path.isfile(experiment_path):
                 os.remove(experiment_path)
+            if os.path.isfile(analyzer_path):
+                os.remove(analyzer_path)
 
     def __str__(self):
         return 'Experiment: ' + self.experiment_name
