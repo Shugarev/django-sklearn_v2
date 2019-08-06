@@ -21,5 +21,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('datalab/', include('datalab.urls'))
+    path('datalab/', include('datalab.urls')),
+    path('api/', include('api.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # добавлено для формирования правильных url к загруженным файлам.
