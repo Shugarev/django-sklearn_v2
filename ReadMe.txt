@@ -1,11 +1,7 @@
 запуск проекта
 python manage.py runserver
 
-миграция
-python manage.py makemigrations datalab
-python manage.py migrate
-
-
+создание базы
 create DATABASE datalab;
 FLUSH PRIVILEGES;
 SET GLOBAL validate_password_policy = 0;
@@ -13,6 +9,11 @@ CREATE USER 'datalab'@'localhost' IDENTIFIED BY 'Datalab1414';
 GRANT ALL PRIVILEGES ON datalab.* TO 'datalab'@'localhost' IDENTIFIED BY 'Datalab1414';
 FLUSH PRIVILEGES;
 
+миграция
+python manage.py makemigrations datalab
+python manage.py migrate
+
+вторая миграция содержит начальное заполнение списка алгоритмов
 
 удалить миграцию
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
@@ -22,36 +23,3 @@ django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module.
 Did you install mysqlclient?
 создать и удалить пользователя. Перезапустить проект. Попробовать доставить пакет а потом удалить. Ошибка уйдет.
 
-# add algorithms and configs in database.
-$ python manage.py shell
-
-from datalab.models import Algorithm
-default_algorithm_params={'learning_rate': 0.2, 'max_depth': 2, 'n_estimators': 60, 'random_state': 123}
-algorithm_params_range={'learning_rate': [0.2, 0.5, 0.7, 1, 1.5], 'max_depth': [2, 3, 5, 7], 'n_estimators': [60, 80, 100, 120, 140], 'random_state': [123]}
-algorithm = Algorithm(algorithm_name='xgboost', default_algorithm_params=default_algorithm_params,algorithm_params_range=algorithm_params_range)
-algorithm.save()
-
-default_algorithm_params={'learning_rate': 0.2, 'n_estimators': 60, 'random_state': 123}
-algorithm_params_range={'learning_rate': [0.2, 0.5, 0.7, 1, 1.5], 'n_estimators': [60, 80, 100, 120, 140], 'random_state': [123]}
-algorithm = Algorithm(algorithm_name='adaboost', default_algorithm_params=default_algorithm_params,algorithm_params_range=algorithm_params_range)
-algorithm.save()
-
-default_algorithm_params={'learning_rate': 0.2, 'max_depth': 2, 'n_estimators': 120, 'random_state': 123}
-algorithm_params_range={'learning_rate': [0.2, 0.5, 0.7, 1, 1.5], 'max_depth': 2, 'n_estimators': [60, 80, 100, 120, 140], 'random_state': [123]}
-algorithm = Algorithm(algorithm_name='gradientboost', default_algorithm_params=default_algorithm_params,algorithm_params_range=algorithm_params_range)
-algorithm.save()
-
-default_algorithm_params={}
-algorithm_params_range={}
-algorithm = Algorithm(algorithm_name='gausnb', default_algorithm_params=default_algorithm_params,algorithm_params_range=algorithm_params_range)
-algorithm.save()
-
-default_algorithm_params={'random_state': 123}
-algorithm_params_range={}
-algorithm = Algorithm(algorithm_name='logregression', default_algorithm_params=default_algorithm_params,algorithm_params_range=algorithm_params_range)
-algorithm.save()
-
-default_algorithm_params={'max_iter': 1000, 'loss': 'modified_huber', 'penalty': 'l2'}
-algorithm_params_range={'penalty': ['none', 'l2', 'l1', 'elasticnet'], 'max_iter': [800, 1000, 1200, 1500]}
-algorithm = Algorithm(algorithm_name='linear_sgd', default_algorithm_params=default_algorithm_params,algorithm_params_range=algorithm_params_range)
-algorithm.save()
