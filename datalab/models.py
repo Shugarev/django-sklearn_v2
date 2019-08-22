@@ -72,7 +72,7 @@ class Profile(ExtraModel):
         return drop_columns
 
     def get_used_factor_list(self):
-        return [k for k, v in self.factors.items() if v == 1]
+        return sorted([k for k, v in self.factors.items() if v == 1 and k != 'status'])
 
     def get_profile_params(self):
         return self.profile_params

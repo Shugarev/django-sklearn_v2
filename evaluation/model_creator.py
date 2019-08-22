@@ -24,11 +24,11 @@ class modelCreator:
     @classmethod
     def create_model(cls, teach_path: str, algorithm_name: str, params: Dict, model_path: str, used_factor_list: List):
         teach = pd.read_csv(teach_path, dtype=str)
-        teach = teach[used_factor_list]
+        teach = teach[used_factor_list + ['status']]
         teach = teach.apply(pd.to_numeric, errors="coerce")
         label = teach.status
         drop_columns = ['status']
-        train = teach.drop(drop_columns, axis=1, errors="ignore")
+        train = teach[used_factor_list]
         if algorithm_name != 'xgboost':
             train = replace_na(train)
         train = train.values

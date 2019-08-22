@@ -50,7 +50,6 @@ def get_used_columns_to_profile(request, teach):
     file_path = "{}/media/{}".format(BASE_DIR, teach.file.name)
     df = pd.read_csv(file_path, dtype=str, nrows=1)
     used_columns = {col: 1 if request.POST.get(col) and request.POST.get(col) == '1' else 0 for col in list(df)}
-    print((used_columns))
     return used_columns
 
 

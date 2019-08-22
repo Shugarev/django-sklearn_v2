@@ -15,10 +15,10 @@ class datasetTester:
     def run(cls, task: str, test_path: str, algorithm_name: str, model_path: str, output_path: str, analyzer_path: str
             ,used_factor_list, description: str=None):
         test = pd.read_csv(test_path, dtype=str)
-        test = test[used_factor_list]
+        test = test[used_factor_list + ['status']]
         algorithm_name = algorithm_name.lower()
         if algorithm_name in Params.ALGORITHMS:
-            test = cls.test_dataset(test, algorithm_name, model_path, output_path)
+            test = cls.test_dataset(test, used_factor_list, algorithm_name, model_path, output_path)
         else:
             raise BaseException("Model {}  does not support .\n".format(algorithm_name))
         if task == 'Tester':
@@ -48,11 +48,10 @@ class datasetTester:
         return model
 
     @classmethod
-    def test_dataset(cls, test: pd.DataFrame, algorithm_name: str, model_path: str, output_path: str) -> pd.DataFrame:
+    def test_dataset(cls, test: pd.DataFrame, used_factor_list:list, algorithm_name: str, model_path: str, output_path: str) -> pd.DataFrame:
         test = test.copy()
         test_modified = test.apply(pd.to_numeric, errors="coerce")
-        drop_columns = ['status']
-        test_modified = test_modified.drop(drop_columns, axis=1, errors="ignore")
+        test_modified = test_modified[used_factor_list]
         if algorithm_name != 'xgboost':
             test_modified = replace_na(test_modified)
         test_matrix = test_modified.as_matrix()
