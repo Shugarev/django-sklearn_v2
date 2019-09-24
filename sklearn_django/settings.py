@@ -76,7 +76,7 @@ DATABASES = {
         'NAME': 'datalab',
         'USER': 'datalab',
         'PASSWORD': 'Datalab1414',
-        'HOST': 'localhost',
+        'HOST': 'db',#db для конейнеров, ''localhost' для локального использования.
         'PORT': '3306',
     }
 }

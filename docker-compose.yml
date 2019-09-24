@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - '3308:3306'
+    environment:
+      MYSQL_DATABASE: 'datalab'
+      MYSQL_USER: 'datalab'
+      MYSQL_PASSWORD: 'Datalab1414'
+      MYSQL_ROOT_USER: 'datalab'
+      MYSQL_ROOT_PASSWORD: 'Datalab1414'
+
+  web:
+    image: shugarev1974/evaluation-service_web
+#    build: .
+    command: bash -c  './wait-for-it.sh db:3306 -s -t 240 -- python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
+    container_name: django-sklearn-v2
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
