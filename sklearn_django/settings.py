@@ -25,8 +25,7 @@ SECRET_KEY = '3%hc)fks1swfzm+6rn5)_12141i&x9i)+m-(6w0*xa2z0oe9qb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0:8000','','127.0.0.1','127.0.0.1:8000', 'localhost']
-
+ALLOWED_HOSTS = ['0.0.0.0:8000','','127.0.0.1','127.0.0.1:8000', 'localhost', '192.168.0.105']
 
 # Application definition
 
@@ -48,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'datalab.middleware.MyMiddleware' # раскомментировать для запуска на одном localhost по разным портам
 ]
 
 ROOT_URLCONF = 'sklearn_django.urls'
@@ -76,7 +76,7 @@ DATABASES = {
         'NAME': 'datalab',
         'USER': 'datalab',
         'PASSWORD': 'Datalab1414',
-        'HOST': 'db',#db для конейнеров, ''localhost' для локального использования.
+        'HOST': 'localhost',#db для конейнеров, localhost для локального использования.
         'PORT': '3306',
     }
 }

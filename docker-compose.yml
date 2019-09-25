@@ -13,12 +13,12 @@ services:
       MYSQL_ROOT_PASSWORD: 'Datalab1414'
 
   web:
-    image: shugarev1974/evaluation-service_web
+    image: shugarev1974/django-sklearn_v2
 #    build: .
     command: bash -c  './wait-for-it.sh db:3306 -s -t 240 -- python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
     container_name: django-sklearn-v2
-    volumes:
-      - .:/code
+#    volumes:
+#      - .:/code
     ports:
       - "8000:8000"
     depends_on:
