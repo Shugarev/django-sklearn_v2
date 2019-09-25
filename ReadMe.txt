@@ -19,10 +19,6 @@ python manage.py migrate
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/migrations/*.pyc"  -delete
 
-django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module.
-Did you install mysqlclient?
-#создать и удалить пользователя. Перезапустить проект. Попробовать доставить пакет а потом удалить. Ошибка уйдет.
-
 # Docker
 
 Подготовительная работа
@@ -54,21 +50,21 @@ docker-compose up
 docker-compose up
 6) Вaжно !
     - в settings.py должны быть прописаны settings.py ALLOWED_HOSTS.
-    - в docker-compose.yml не должно быть раздела volumes
-    ( если этот раздел есть, то предполагается что на всех машинах, на которые будет установливаться контейнер
-    структура папок одинаковая. volumes можно оставить только на этапе разработки, тогда очень удобно при изменении
-    локально происходят изменения в контейнере.)
-    volumes:
-      - .:/code
+    - раздела volumes
+     volumes:
+      - ./media:/code/media
+     Папка ./media(путь от файла docker-compose.yml) на хосте мэпится в папку /code/media в контейнере. Это значит, при запуске docker-copose up
+     папка содержимое папки /code/media удаляется. И это папка ссылается на папку ./media на хосте. В дальнейшем контейнер работает с папкой хоста.
+     После остановки контейнера вся информация остается на хосте и восстанавливается при restart. Файлы, созданные в контейнере имеют
+     пользователя root.
     - раздел links в docker-compose.yml deprecated, вместо него depends_on
-    - раздел buil в в docker-compose.yml можно оставить только если работаешь локально или в папке откуда идет запуск находятся файлы проекта.
+    - раздел build в в docker-compose.yml можно оставить только если работаешь локально или в папке откуда идет запуск находятся файлы проекта.
     - На сервере проект работает http://192.168.0.105:8000/datalab/dataset/
-    - на проде тушить контейнер
 
 
 docker-compose.yml содержит два контейнера.
 Для того, чтобы в web контейнере выполнились миграции вначале должен полностью прогрузиться
-контейнер db(db - загружает mysql в контейнер)
+контейнер db(db - загружает mysql в контейнер). Порядок загузки указан в разделе depends on.
 
 
 Список команд:
@@ -83,26 +79,28 @@ docker rm $( docker ps -a -q -f status=exited) -удалить все остан
 docker-copose up - создание и запуск всех контейнеров находящися в файле docker-compost.yml
 docker-compose run db -d  - создание и запуск контейнера db (из файла docker-compost.yml), демон.
 docker-compose run web -d - создание и запуск контейнера web (из файла docker-compost.yml), демон.
-docker-compose down - остановить все контейнеры
+docker-compose down - остановливает и удаляет контейнеры запущенные текущим docker-compose
 
-Note: Port mapping is incompatible with network_mode: host
+docker run image_id - создать контейнер из image
+
+docker login залогиниться в репозитории(https://hub.docker.com login: shugarev1974,)
+docker push shugarev1974/evaluation-service1414  запушить image в репозиторий https://hub.docker.com
+docker pull  shugarev1974/evaluation-service1414 cтянуть из репозитория
 
 зайти в mysql по порту, в котором работает контейнер.
 mysql -udatalab -pDatalab1414 -h127.0.0.1 -P3308
 show databases;
 datalab'@'172.26.0.1'
 
-залогиниться в репозитории(https://hub.docker.com login: shugarev1974,)
-docker login
-
-запушить image в репозиторий https://hub.docker.com
-docker push shugarev1974/evaluation-service1414
-
-стянуть из репозитория
-docker pull  shugarev1974/evaluation-service1414
-
-
-
- # Для работы с приложениями запущенными на localhost-е по другим портам необходимо в settings.py раскомментировать
+Для работы с приложениями запущенными на localhost-е по другим портам необходимо в settings.py раскомментировать
  строку 'api.middleware.MyMiddleware' и создать файл api/middleware.py  в котором изменяется header response.
  Или взаимодействовать через локальный proxy server (cors-anywhere)
+
+Для очистки данных на сервере.
+- зайти внутрь работающего контейнера mysql:5.7( см. список команд сверху)
+- выполнить команды по удалению и созданию базы:
+mysql --host=127.0.0.1 -P 3306 -u datalab -pDatalab1414 -e "DROP DATABASE datalab;"
+mysql --host=127.0.0.1 -P 3306 -u datalab -pDatalab1414 -e "CREATE DATABASE datalab;"
+(не понятно нужны ли host и port?)
+- зайти внутрь работающего контейнера shugarev1974/django-sklearn_v2  ( см. список команд сверху)
+- внутри контейнера выполнить bash скрипт ./clear-temporary.sh
