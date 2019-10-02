@@ -49,7 +49,7 @@ class UploadDataSet(ModelForm):
 
 
 class Algorithm(models.Model):
-    algorithm_name = models.CharField(max_length=20, blank=False)
+    algorithm_name = models.CharField(max_length=30, blank=False)
     default_algorithm_params = JSONField()
     # для подбора лучших параметров для модели
     algorithm_params_range = JSONField()
@@ -59,8 +59,8 @@ class Profile(ExtraModel):
     teach = models.ForeignKey(DataSet, on_delete=models.PROTECT)
     algorithm = models.ForeignKey(Algorithm, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True)
-    feature_importance = models.CharField(max_length=64, blank=False)
-    profile_name = models.CharField(max_length=30, blank=False)
+    feature_importance = models.CharField(max_length=100, blank=False)
+    profile_name = models.CharField(max_length=100, blank=False)
     profile_params = JSONField()
     factors = JSONField()
 
@@ -96,8 +96,8 @@ class Experiment(ExtraModel):
     test = models.ForeignKey(DataSet, on_delete=models.PROTECT)
     profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True)
-    experiment_name = models.CharField(max_length=30, blank=False)
-    analyzer_name = models.CharField(max_length=30, blank=False)
+    experiment_name = models.CharField(max_length=100, blank=False)
+    analyzer_name = models.CharField(max_length=100, blank=False)
 
     def delete(self, *args, **kwargs):
         is_deletable, related = self.is_deletable()

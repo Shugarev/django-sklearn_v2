@@ -68,7 +68,7 @@ docker-compose.yml содержит два контейнера.
 
 
 Список команд:
-docker images - список образов.
+docker images - список образов. ( docker history image_name - посмотреть историю запуска образов, пример docker history mysql:5.7)
 docker ps  - список работающих контейнеров.
 docker exec -it 72ca2488b353 bash - зайти внутрь работающего контейнера
 docker ps -a список всех конейнеров.
@@ -86,6 +86,10 @@ docker run image_id - создать контейнер из image
 docker login залогиниться в репозитории(https://hub.docker.com login: shugarev1974,)
 docker push shugarev1974/evaluation-service1414  запушить image в репозиторий https://hub.docker.com
 docker pull  shugarev1974/evaluation-service1414 cтянуть из репозитория
+docker logs container_id -f - запуск вывода лога контейнера в терминал
+
+Для для удаления ненужных файлов из контекста создания образа можно воспользоваться файлом .dockerignore
+Допускаютсясимволы шаблонов * и  ?
 
 зайти в mysql по порту, в котором работает контейнер.
 mysql -udatalab -pDatalab1414 -h127.0.0.1 -P3308
