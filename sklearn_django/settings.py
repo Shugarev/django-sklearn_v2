@@ -25,10 +25,9 @@ SECRET_KEY = '3%hc)fks1swfzm+6rn5)_12141i&x9i)+m-(6w0*xa2z0oe9qb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0:8000','','127.0.0.1','127.0.0.1:8000', 'localhost']
 if os.getenv('ALLOWED_HOSTS') is not None:
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
-print('ALLOWED_HOSTS', ALLOWED_HOSTS)
 
 # Application definition
 
