@@ -35,8 +35,12 @@ docker build -t shugarev1974/django-sklearn_v2 .
 docker login
 5) запушить в репозиторий
 docker push shugarev1974/django-sklearn_v2
+пункты 0, 3, 4 ,5 реализованы в  build-push-docker_image.sh
+
 6) проверить наличие файла wait-for-it.sh в папке с docker-compose.yml
-7) Из корня проекта выполнить
+7) проверить наличие и содержание файлов web.env
+В данном проекте в настройках окружения хранятся переменная ALLOWED_HOSTS, которая в setting.py map-ся в список разрешенных hosts.
+8) Из корня проекта выполнить
 docker-compose up
 
  - проект будет доступен по ссылке http://localhost:8000/datalab/
@@ -44,12 +48,12 @@ docker-compose up
 Запустить проект на другом хосте.
 1) Проверить наличие docker и docker compose( docker version, docker-compose  version. При необходимости установить оба пакета)
 2) Создать новую директорию
-3) записать два файла docker-compose.yml и  wait-for-it.sh
+3) записать два файла docker-compose.yml и  wait-for-it.sh, web.env
 4) залогиниться docker login
 5) Выполнить команду из директории
 docker-compose up
 6) Вaжно !
-    - в settings.py должны быть прописаны settings.py ALLOWED_HOSTS.
+    - в settings.py должны быть прописаны settings.py ALLOWED_HOSTS(или ALLOWED_HOSTS берутся из переменных окружения)
     - раздела volumes
      volumes:
       - ./media:/code/media
@@ -61,6 +65,12 @@ docker-compose up
     - раздел build в в docker-compose.yml можно оставить только если работаешь локально или в папке откуда идет запуск находятся файлы проекта.
     - На сервере проект работает http://192.168.0.105:8000/datalab/dataset/
 
+7) Внесение изменения в application. Если мы не хотим терять базу, но необходимо перебилдить web конетейнер.
+Тогда нужно остановить и удалить конейнер и образ (web).
+Выполнить команду docker-compose up --no-deps web
+где image shugarev1974/django-sklearn_v2 стянется из репозитория, произойдет build, и создастя и запустится контейнер web.
+  web:
+    image: shugarev1974/django-sklearn_v2
 
 docker-compose.yml содержит два контейнера.
 Для того, чтобы в web контейнере выполнились миграции вначале должен полностью прогрузиться

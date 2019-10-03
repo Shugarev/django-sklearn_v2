@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   db:
@@ -11,15 +11,18 @@ services:
       MYSQL_PASSWORD: 'Datalab1414'
       MYSQL_ROOT_USER: 'datalab'
       MYSQL_ROOT_PASSWORD: 'Datalab1414'
-
+    restart: always
   web:
     image: shugarev1974/django-sklearn_v2
-#    build: .
+    env_file:
+      - ./web.env
     command: bash -c  './wait-for-it.sh db:3306 -s -t 240 -- python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
     container_name: django-sklearn-v2
-#    volumes:
-#      - .:/code
+    user: ${CURRENT_UID}
+    volumes:
+      - ./media:/code/media
     ports:
       - "8000:8000"
     depends_on:
       - db
+    restart: always
