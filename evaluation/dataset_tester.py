@@ -54,7 +54,7 @@ class datasetTester:
         test_modified = test_modified[used_factor_list]
         if algorithm_name != 'xgboost':
             test_modified = replace_na(test_modified)
-        test_matrix = test_modified.as_matrix()
+        test_matrix = test_modified.values
         loaded_model = cls.get_model(algorithm_name, model_path)
         test_pred = loaded_model.predict_proba(test_matrix)
         test["probability"] = test_pred[:, 1]
