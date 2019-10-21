@@ -6,6 +6,7 @@ from sklearn import linear_model
 from sklearn import tree
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
@@ -69,12 +70,14 @@ class modelCreator:
             return linear_model.SGDClassifier(**config)
         elif algorithm_name == 'lightgbm':
             return LGBMClassifier(**config)
+        elif algorithm_name == 'kneighbors':
+            return KNeighborsClassifier(**config)
 
     # TODO подбор параметро для алгоритма
     @classmethod
     def find_best_params(cls, teach_path: str, params: Dict, algorithm_name: Dict, parameters_range: Dict):
         teach = pd.read_csv(teach_path, dtype=str)
-        if algorithm_name in ['adaboost', 'gradientboost', 'xgboost', 'linear_sgd']:
+        if algorithm_name in ['adaboost', 'gradientboost', 'xgboost', 'linear_sgd', 'lightgbm', 'kneighbors']:
             teach = teach.apply(pd.to_numeric, errors="coerce")
             label = teach.status
             drop_columns = ['status']

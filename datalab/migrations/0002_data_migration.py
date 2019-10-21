@@ -40,13 +40,19 @@ def populate_algorithms(*args):
     algorithm_params_range = {'penalty': ['none', 'l2', 'l1', 'elasticnet'], 'max_iter': [800, 1000, 1200, 1500]}
     algorithm = Algorithm(algorithm_name='linear_sgd', default_algorithm_params=default_algorithm_params,
                           algorithm_params_range=algorithm_params_range)
+    algorithm.save()
 
     default_algorithm_params = {'learning_rate': 0.1, 'max_depth': -1, 'n_estimators': 100, 'num_leaves': 31,
                                 'objective': 'binary','random_state': 123}
-
     algorithm_params_range = {'learning_rate': [0.02, 0.05, 0.1, 0.2, 0.5], 'max_depth': [2, 3, 5, 7],
                               'n_estimators': [60, 80, 100, 120, 140], 'random_state': [123]}
     algorithm = Algorithm(algorithm_name='lightgbm', default_algorithm_params=default_algorithm_params,
+                          algorithm_params_range=algorithm_params_range)
+    algorithm.save()
+
+    default_algorithm_params = {'weights': 'distance', 'n_neighbors': 20}
+    algorithm_params_range = {'weights': ['uniform', 'distance'], 'n_neighbors': [3, 5, 7, 9, 20, 25]}
+    algorithm = Algorithm(algorithm_name='kneighbors', default_algorithm_params=default_algorithm_params,
                           algorithm_params_range=algorithm_params_range)
     algorithm.save()
 
