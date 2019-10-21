@@ -9,6 +9,7 @@ from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
+from lightgbm import LGBMClassifier
 
 from evaluation.dataset_preprocessing import replace_na, get_sample_weight, get_xgb_weight
 
@@ -18,7 +19,7 @@ class modelCreator:
     @classmethod
     def run(cls, teach_path: str, algorithm_name: str, params: Dict, model_path: str, used_factor_list: List, feature_path):
         model, teach, drop_columns = cls.create_model(teach_path, algorithm_name, params, model_path, used_factor_list)
-        if algorithm_name in ['adaboost', 'decisiontree', 'gradientboost', 'xgboost']:
+        if algorithm_name in ['adaboost', 'decisiontree', 'gradientboost', 'xgboost', 'lightgbm']:
             cls.save_feature_importances(teach, drop_columns, model.feature_importances_, feature_path)
 
     @classmethod
@@ -66,6 +67,8 @@ class modelCreator:
             return LogisticRegression(**config)
         elif algorithm_name == 'linear_sgd':
             return linear_model.SGDClassifier(**config)
+        elif algorithm_name == 'lightgbm':
+            return LGBMClassifier(**config)
 
     # TODO подбор параметро для алгоритма
     @classmethod
