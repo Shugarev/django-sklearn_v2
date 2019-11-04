@@ -38,16 +38,15 @@ class modelCreator:
         if algorithm_name == 'xgboost':
             weight = get_xgb_weight(teach)
             model.fit(train, label, sample_weight=weight, eval_metric="auc")  #
-            booster = model.get_booster()
-            # booster = model.booster() # для более ранних версий xgboost-a ( 0.6.a2)
-            booster.save_model(model_path)
         else:
             if algorithm_name == 'adaboost':
                 weight = get_sample_weight(teach)
                 model.fit(train, label, sample_weight=weight)
             else:
                 model.fit(train, label)
-            joblib.dump(model, model_path)
+        model._factor_list = used_factor_list
+        model._algorithm_name = algorithm_name
+        joblib.dump(model, model_path)
         return model, teach, drop_columns
 
     @classmethod

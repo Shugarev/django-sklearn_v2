@@ -92,6 +92,7 @@ docker-compose run web -d - создание и запуск контейнер�
 docker-compose down - остановливает и удаляет контейнеры запущенные текущим docker-compose
 
 docker run image_id - создать контейнер из image
+docker system prune удаляет все остановленные контейнеры, обособленные образы, и чистит cashe
 
 docker login залогиниться в репозитории(https://hub.docker.com login: shugarev1974,)
 docker push shugarev1974/evaluation-service1414  запушить image в репозиторий https://hub.docker.com

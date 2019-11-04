@@ -1,9 +1,7 @@
 import os.path
 
 import pandas as pd
-import xgboost as xgb
 import joblib
-from xgboost import Booster
 
 from evaluation.analyzer_result import get_df_prediction
 from evaluation.dataset_preprocessing import replace_na
@@ -37,14 +35,8 @@ class datasetTester:
             cls.show_single_order_info(test)
 
     @classmethod
-    def get_model(cls, algorithm_name: str, model_path: str):
-        if algorithm_name == 'xgboost':
-            model = xgb.XGBClassifier()
-            booster = Booster()
-            booster.load_model(model_path)
-            model._Booster = booster
-        else:
-            model = joblib.load(model_path)
+    def get_model(cls, model_path: str) -> object:
+        model = joblib.load(model_path)
         return model
 
     @classmethod
@@ -55,7 +47,7 @@ class datasetTester:
         if algorithm_name != 'xgboost':
             test_modified = replace_na(test_modified)
         test_matrix = test_modified.values
-        loaded_model = cls.get_model(algorithm_name, model_path)
+        loaded_model = cls.get_model(model_path)
         test_pred = loaded_model.predict_proba(test_matrix)
         test["probability"] = test_pred[:, 1]
         test.to_csv(output_path, index=False, quoting=1)
