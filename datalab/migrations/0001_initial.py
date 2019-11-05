@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='Algorithm',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('algorithm_name', models.CharField(max_length=20)),
+                ('algorithm_name', models.CharField(max_length=30)),
                 ('default_algorithm_params', django_mysql.models.JSONField(default=dict)),
                 ('algorithm_params_range', django_mysql.models.JSONField(default=dict)),
             ],
@@ -38,8 +38,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('feature_importance', models.CharField(max_length=64)),
-                ('profile_name', models.CharField(max_length=30)),
+                ('feature_importance', models.CharField(max_length=100)),
+                ('profile_name', models.CharField(max_length=100)),
                 ('profile_params', django_mysql.models.JSONField(default=dict)),
                 ('factors', django_mysql.models.JSONField(default=dict)),
                 ('algorithm', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='datalab.Algorithm')),
@@ -54,8 +54,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('experiment_name', models.CharField(max_length=30)),
-                ('analyzer_name', models.CharField(max_length=30)),
+                ('experiment_name', models.CharField(max_length=100)),
+                ('analyzer_name', models.CharField(max_length=100)),
                 ('profile', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='datalab.Profile')),
                 ('test', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='datalab.DataSet')),
             ],
