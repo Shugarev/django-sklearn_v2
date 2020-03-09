@@ -45,12 +45,13 @@ docker-compose up
 
  - проект будет доступен по ссылке http://localhost:8000/datalab/
 
-Запустить проект на другом хосте.
-1) Проверить наличие docker и docker compose( docker version, docker-compose  version. При необходимости установить оба пакета)
-2) Создать новую директорию с проектом, а также в ней создать директорию 	/media- в которой создать еще необходимые поддиректории проекта /datasets, /exp, /fi, /profile
-3) Записать три файла docker-compose.yml, wait-for-it.sh, web.env
+Запуск проекта на другом хосте:
+
+1) Проверить наличие на компьютере docker и docker compose( docker version, docker-compose  version. При необходимости установить оба пакета)
+2) Создать новую директорию с проектом - sklearn... , а также в ней создать директорию 	/media- в которой создать еще необходимые поддиректории проекта /datasets, /exp, /fi, /profile
+3) Создать три файла в sklearn... (терминал touch) docker-compose.yml, wait-for-it.sh, web.env и скопировать их содержимое с Github Shugarev/django-sklearn_v2
 4) Залогиниться docker login (если докер запускается впервые)
-5) Выполнить команду из директории docker-compose up
+5) Выполнить команду из директории sklearn... docker-compose up
 Проект будет доступен по ссылке http://localhost:8000/datalab/
 6) Вaжно !
     - в settings.py должны быть прописаны settings.py ALLOWED_HOSTS(или ALLOWED_HOSTS берутся из переменных окружения)
