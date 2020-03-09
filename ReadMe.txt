@@ -47,11 +47,11 @@ docker-compose up
 
 Запустить проект на другом хосте.
 1) Проверить наличие docker и docker compose( docker version, docker-compose  version. При необходимости установить оба пакета)
-2) Создать новую директорию
-3) записать два файла docker-compose.yml и  wait-for-it.sh, web.env
-4) залогиниться docker login
-5) Выполнить команду из директории
-docker-compose up
+2) Создать новую директорию с проектом, а также в ней создать директорию 	/media- в которой создать еще необходимые поддиректории проекта /datasets, /exp, /fi, /profile
+3) Записать три файла docker-compose.yml, wait-for-it.sh, web.env
+4) Залогиниться docker login (если докер запускается впервые)
+5) Выполнить команду из директории docker-compose up
+Проект будет доступен по ссылке http://localhost:8000/datalab/
 6) Вaжно !
     - в settings.py должны быть прописаны settings.py ALLOWED_HOSTS(или ALLOWED_HOSTS берутся из переменных окружения)
     - раздела volumes
